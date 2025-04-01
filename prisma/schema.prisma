@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid()) @map("_id")
+  email        String   @unique
+  name         String
+  password     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  filial       String
+  levelUser    Int
+  statusDelete Boolean
+}
+
+model Solicitation {
+  id                      String   @id @default(uuid()) @map("_id")
+  userName                String
+  filial                  String
+  urgency                 String
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  atendedAt               DateTime?
+  categoryEquipment       String
+  equipment               String
+  categoryService         String
+  description             String
+  status                  String
+  statusDelete            Boolean
+}
+
+model SolicitationHistoric {
+  id                      String   @id @default(uuid()) @map("_id")
+  userName                String
+  filial                  String
+  urgency                 String
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  atendedAt               DateTime?
+  categoryEquipment       String
+  equipment               String
+  categoryService         String
+  description             String
+  status                  String
+  statusDelete            Boolean
+}
+
+model categoryEquipment {
+  id                String   @id @default(uuid()) @map("_id")
+  name              String
+  statusDelete      Boolean
+}
+
+model Equipment {
+  id                String   @id @default(uuid()) @map("_id")
+  tag               String
+  name              String
+  filial            String
+  statusDelete      Boolean
+  categoryEquipment String
+}
+
+model filial {
+  id                String   @id @default(uuid()) @map("_id")
+  name              String
+  statusDelete      Boolean
+}
