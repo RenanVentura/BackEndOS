@@ -23,10 +23,12 @@ model User {
   filial       String
   levelUser    Int
   statusDelete Boolean
+  costCenter   String
 }
 
 model Solicitation {
   id                      String   @id @default(uuid()) @map("_id")
+  numSol                  String
   userName                String
   filial                  String
   urgency                 String
@@ -34,15 +36,18 @@ model Solicitation {
   updatedAt               DateTime @updatedAt
   atendedAt               DateTime?
   categoryEquipment       String
+  tagEquipment            String
   equipment               String
   categoryService         String
   description             String
   status                  String
   statusDelete            Boolean
+  costCenter              String
 }
 
 model SolicitationHistoric {
   id                      String   @id @default(uuid()) @map("_id")
+  numSol                  String
   userName                String
   filial                  String
   urgency                 String
@@ -50,11 +55,13 @@ model SolicitationHistoric {
   updatedAt               DateTime @updatedAt
   atendedAt               DateTime?
   categoryEquipment       String
+  tagEquipment            String
   equipment               String
   categoryService         String
   description             String
   status                  String
   statusDelete            Boolean
+  costCenter              String
 }
 
 model categoryEquipment {
@@ -65,7 +72,7 @@ model categoryEquipment {
 
 model Equipment {
   id                String   @id @default(uuid()) @map("_id")
-  tag               String
+tagEquipment        String
   name              String
   filial            String
   statusDelete      Boolean
