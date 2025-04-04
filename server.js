@@ -1,10 +1,12 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import cors from "cors";
 
 const prisma = new PrismaClient();
 
 const app = express();
 app.use(express.json());
+app.use(cors({ origin: "http://localhost:5173" }));
 
 // ----------------------------------------------------- Rota POST
 app.post("/users", async (req, res) => {
@@ -31,16 +33,19 @@ app.post("/solicitation", async (req, res) => {
   await prisma.solicitation
     .create({
       data: {
+        numSol: req.body.numSol,
         userName: req.body.userName,
         filial: req.body.filial,
         urgency: req.body.urgency,
         atendedAt: req.body.atendedAt,
         categoryEquipment: req.body.categoryEquipment,
+        tagEquipment: req.body.tagEquipment,
         equipment: req.body.equipment,
         categoryService: req.body.categoryService,
         description: req.body.description,
         status: req.body.status,
         statusDelete: req.body.statusDelete,
+        costCenter: req.body.costCenter,
       },
     })
     .then((solicitation) => {
@@ -55,16 +60,19 @@ app.post("/solicitationHistoric", async (req, res) => {
   await prisma.solicitationHistoric
     .create({
       data: {
+        numSol: req.body.numSol,
         userName: req.body.userName,
         filial: req.body.filial,
         urgency: req.body.urgency,
         atendedAt: req.body.atendedAt,
         categoryEquipment: req.body.categoryEquipment,
+        tagEquipment: req.body.tagEquipment,
         equipment: req.body.equipment,
         categoryService: req.body.categoryService,
         description: req.body.description,
         status: req.body.status,
         statusDelete: req.body.statusDelete,
+        costCenter: req.body.costCenter,
       },
     })
     .then((solicitation) => {
@@ -95,7 +103,7 @@ app.post("/Equipament", async (req, res) => {
   await prisma.equipment
     .create({
       data: {
-        tag: req.body.tag,
+        tagEquipment: req.body.tagEquipment,
         name: req.body.name,
         filial: req.body.filial,
         statusDelete: req.body.statusDelete,
