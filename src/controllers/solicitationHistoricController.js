@@ -11,6 +11,8 @@ export const solicitationHistoricController = {
         data: {
           ...req.body,
           userName: user.name,
+          filial: user.filial,
+          costCenter: user.costCenter,
         },
       });
 

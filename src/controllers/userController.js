@@ -108,6 +108,8 @@ export const login = async (req, res) => {
         nivel: user.levelUser,
         name: user.name,
         email: user.email,
+        filial: user.filial,
+        costCenter: user.costCenter,
       },
       "seuSegredoJWT",
       { expiresIn: "1h" }
