@@ -68,4 +68,20 @@ export const solicitationController = {
       res.status(400).json({ error: error.message });
     }
   },
+  async lastNumber(req, res) {
+    try {
+      const last = await prisma.solicitation.findFirst({
+        orderBy: {
+          numSol: "desc",
+        },
+      });
+
+      console.log("Último número:", last?.numSol); // <== IMPORTANTE PRA TESTE
+
+      res.json(last?.numSol || 0);
+    } catch (error) {
+      console.error("Erro ao buscar último número:", error);
+      res.status(500).json({ error: "Erro interno ao buscar número." });
+    }
+  },
 };
