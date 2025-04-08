@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { categoryEquipmentController } from "../controllers/categoryEquipmentController.js";
+import { authenticateToken } from "../../middlewares/auth.js";
 
 const router = Router();
 
-router.post("/", categoryEquipmentController.create);
-router.get("/", categoryEquipmentController.findAll);
-router.put("/:id", categoryEquipmentController.update);
+router.post("/", authenticateToken, categoryEquipmentController.create);
+router.get("/", authenticateToken, categoryEquipmentController.findAll);
+router.put("/:id", authenticateToken, categoryEquipmentController.update);
 
 export default router;
