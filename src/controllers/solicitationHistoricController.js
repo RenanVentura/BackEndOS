@@ -4,22 +4,21 @@ const prisma = new PrismaClient();
 export const solicitationHistoricController = {
   async create(req, res) {
     try {
-      const { nivel, id } = req.user;
-      const user = await prisma.user.findUnique({ where: { id } });
+      const { name, filial, costCenter } = req.user;
 
-      const solicitationsHistoric = await prisma.solicitation.create({
+      const solicitationsHistoric = await prisma.SolicitationHistoric.create({
         data: {
           ...req.body,
-          userName: user.name,
-          filial: user.filial,
-          costCenter: user.costCenter,
+          userName: name,
+          filial,
+          costCenter,
         },
       });
 
-      res.json(solicitationsHistoric);
+      res.status(201).json(solicitationsHistoric);
     } catch (error) {
       console.error("Erro ao criar solicitação:", error);
-      res.status(400).json({ error: error.message });
+      res.status(500).json({ error: "Erro interno ao criar solicitação." });
     }
   },
 
