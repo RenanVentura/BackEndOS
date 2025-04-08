@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { solicitationHistoricController } from "../controllers/solicitationHistoricController.js";
+import { authenticateToken } from "../../middlewares/auth.js";
 
 const router = Router();
 
-router.post("/", solicitationHistoricController.create);
-router.get("/", solicitationHistoricController.findAll);
-router.get("/:id", solicitationHistoricController.findById);
-router.put("/:id", solicitationHistoricController.update);
-router.delete("/:id", solicitationHistoricController.delete);
+router.post("/", authenticateToken, solicitationHistoricController.create);
+router.get("/", authenticateToken, solicitationHistoricController.findAll);
+router.get("/:id", authenticateToken, solicitationHistoricController.findById);
+router.put("/:id", authenticateToken, solicitationHistoricController.update);
+router.delete("/:id", authenticateToken, solicitationHistoricController.delete);
 
 export default router;

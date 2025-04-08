@@ -2,18 +2,24 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const solicitationController = {
-  // Criar nova solicitação
   async create(req, res) {
     try {
+      const { nivel, id } = req.user;
+      const user = await prisma.user.findUnique({ where: { id } });
+
       const solicitation = await prisma.solicitation.create({
-        data: req.body,
+        data: {
+          ...req.body,
+          userName: user.name,
+        },
       });
+
       res.json(solicitation);
     } catch (error) {
+      console.error("Erro ao criar solicitação:", error);
       res.status(400).json({ error: error.message });
     }
   },
-
   // Listar todas solicitações
   async findAll(req, res) {
     try {

@@ -103,8 +103,13 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, nivel: user.levelUser },
-      "seuSegredoJWT", // Substitua por process.env.JWT_SECRET em produção
+      {
+        id: user.id,
+        nivel: user.levelUser,
+        name: user.name,
+        email: user.email,
+      },
+      "seuSegredoJWT",
       { expiresIn: "1h" }
     );
 
