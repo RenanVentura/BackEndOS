@@ -22,11 +22,16 @@ export const solicitationHistoricController = {
     }
   },
 
-  // Listar todas solicitações
   async findAll(req, res) {
+    const { deleted } = req.query;
+
     try {
-      const solicitationsHistoric =
-        await prisma.solicitationHistoric.findMany();
+      const solicitationsHistoric = await prisma.solicitationHistoric.findMany({
+        where: {
+          statusDelete: deleted === "true" ? true : false,
+        },
+      });
+
       res.json(solicitationsHistoric);
     } catch (error) {
       res.status(400).json({ error: error.message });

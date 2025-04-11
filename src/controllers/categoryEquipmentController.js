@@ -15,15 +15,22 @@ export const categoryEquipmentController = {
   },
 
   // Listar todas categorias
+
   async findAll(req, res) {
+    const { deleted } = req.query;
+
     try {
-      const categories = await prisma.categoryEquipment.findMany();
-      res.json(categories);
+      const category = await prisma.categoryEquipment.findMany({
+        where: {
+          statusDelete: deleted === "true" ? true : false,
+        },
+      });
+
+      res.json(category);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   },
-
   // Atualizar categoria
   async update(req, res) {
     try {

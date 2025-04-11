@@ -16,8 +16,15 @@ export const equipmentController = {
 
   // Listar todos equipamentos
   async findAll(req, res) {
+    const { deleted } = req.query;
+
     try {
-      const equipments = await prisma.equipment.findMany();
+      const equipments = await prisma.equipment.findMany({
+        where: {
+          statusDelete: deleted === "true" ? true : false,
+        },
+      });
+
       res.json(equipments);
     } catch (error) {
       res.status(400).json({ error: error.message });
