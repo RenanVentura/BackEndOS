@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { solicitationController } from "../controllers/solicitationController.js";
+import solicitationController from "../controllers/solicitationController.js";
 import { authenticateToken } from "../../middlewares/auth.js";
 
 const router = Router();

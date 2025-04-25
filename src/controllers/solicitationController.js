@@ -21,60 +21,107 @@ export const solicitationController = {
       res.status(500).json({ error: "Erro interno ao criar solicitação." });
     }
   },
-  // Listar todas solicitações
+
   async findAll(req, res) {
-    const { deleted } = req.query;
+    const {
+      deleted,
+      urgency,
+      startDate,
+      endDate,
+      requester,
+      filial,
+      status,
+      page = 1,
+      limit = 10,
+    } = req.query;
 
     try {
-      const solicitation = await prisma.solicitation.findMany({
-        where: {
-          statusDelete: deleted === "true" ? true : false,
-        },
+      console.log("REQ.QUERY ===>", req.query);
+
+      const whereConditions = {
+        statusDelete: deleted === "true",
+      };
+
+      if (urgency) whereConditions.urgency = urgency;
+
+      if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (isNaN(start) || isNaN(end)) {
+          return res.status(400).json({ error: "Datas inválidas fornecidas." });
+        }
+
+        whereConditions.createdAt = {
+          gte: start,
+          lte: end,
+        };
+      }
+
+      if (requester) whereConditions.userName = requester;
+      if (filial) whereConditions.filial = filial;
+      if (status) whereConditions.status = status;
+
+      console.log("FILTRO FINAL ===>", whereConditions);
+
+      const total = await prisma.solicitation.count({ where: whereConditions });
+      console.log("QUANTIDADE DE RESULTADOS:", total);
+
+      const solicitations = await prisma.solicitation.findMany({
+        where: whereConditions,
+        skip: (page - 1) * limit,
+        take: limit,
       });
 
-      res.json(solicitation);
+      res.json(solicitations);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      console.error("Erro ao buscar solicitações:", error);
+      res.status(500).json({ error: "Erro interno ao buscar solicitações." });
     }
   },
 
-  // Buscar solicitação por ID
   async findById(req, res) {
     try {
       const solicitation = await prisma.solicitation.findUnique({
         where: { id: req.params.id },
       });
+
+      if (!solicitation) {
+        return res.status(404).json({ error: "Solicitação não encontrada." });
+      }
+
       res.json(solicitation);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   },
 
-  // Atualizar solicitação
   async update(req, res) {
     try {
       const solicitation = await prisma.solicitation.update({
         where: { id: req.params.id },
         data: req.body,
       });
+
       res.json(solicitation);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   },
 
-  // Deletar solicitação (soft delete)
-  async delete(req, res) {
+  async deleteSolicitation(req, res) {
     try {
       const solicitation = await prisma.solicitation.update({
         where: { id: req.params.id },
         data: { statusDelete: true },
       });
+
       res.json(solicitation);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   },
+
   async lastNumber(req, res) {
     try {
       const last = await prisma.solicitation.findFirst({
@@ -83,7 +130,7 @@ export const solicitationController = {
         },
       });
 
-      console.log("Último número:", last?.numSol); // <== IMPORTANTE PRA TESTE
+      console.log("Último número:", last?.numSol);
 
       res.json(last?.numSol || 0);
     } catch (error) {
@@ -91,4 +138,14 @@ export const solicitationController = {
       res.status(500).json({ error: "Erro interno ao buscar número." });
     }
   },
+};
+
+// Exportando com alias para deleteSolicitation
+export default {
+  create: solicitationController.create,
+  findAll: solicitationController.findAll,
+  findById: solicitationController.findById,
+  update: solicitationController.update,
+  delete: solicitationController.deleteSolicitation,
+  lastNumber: solicitationController.lastNumber,
 };
