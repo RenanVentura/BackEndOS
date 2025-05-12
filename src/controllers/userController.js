@@ -43,12 +43,16 @@ export const create = async (req, res) => {
   }
 };
 
-// Listar todos os usuários
 export const findAll = async (req, res) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      where: {
+        statusDelete: false,
+      },
+    });
     res.json(users);
   } catch (error) {
+    console.error("Erro ao buscar usuários:", error); // log no terminal
     res.status(500).json({ error: error.message });
   }
 };
